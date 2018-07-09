@@ -13,3 +13,10 @@ Appendix Link: http://medianetlab.ee.ucla.edu/papers/ICML_GAIN_Supp.pdf
 
 Description of the code
 
+This code shows the implementation of GAIN on MNIST dataset.
+
+1. Introducing 50% of missingness on MNIST dataset.
+
+2. Recover missing values on MNIST datasets using GAIN.
+
+3. Show the multiple imputation results on MNIST with GAIN.
