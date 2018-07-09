@@ -1,7 +1,7 @@
-# GAIN
-Generative Adversarial Imputation Networks (GAIN)
+# Generative Adversarial Imputation Networks (GAIN)
+GAIN: Missing Data Imputation using Generative Adversarial Nets
 
-Written by Jinsung Yoon
+Authors: Jinsung Yoon, James Jordon, Mihaela van der Schaar
 
 Date: TBD
 
