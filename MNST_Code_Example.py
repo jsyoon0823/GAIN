@@ -1,13 +1,10 @@
 '''
 Written by Jinsung Yoon
-Date: Jul 9th 2018
-
+Date: Jul 9th 2018 (Revised Oct 19th 2018)
 Generative Adversarial Imputation Networks (GAIN) Implementation on MNIST
-
 Reference: J. Yoon, J. Jordon, M. van der Schaar, "GAIN: Missing Data Imputation using Generative Adversarial Nets," ICML, 2018.
 Paper Link: http://medianetlab.ee.ucla.edu/papers/ICML_GAIN.pdf
 Appendix Link: http://medianetlab.ee.ucla.edu/papers/ICML_GAIN_Supp.pdf
-
 Contact: jsyoon0823@g.ucla.edu
 '''
 
@@ -20,10 +17,6 @@ import matplotlib.gridspec as gridspec
 import os
 from tqdm import tqdm
 
-#%% Data Input
-# MNIST
-mnist = input_data.read_data_sets('../../MNIST_data', one_hot = True)
-
 #%% System Parameters
 # 1. Mini batch size
 mb_size = 128
@@ -35,6 +28,27 @@ p_hint = 0.9
 alpha = 10
 # 5. Imput Dim (Fixed)
 Dim = 784
+# 6. No
+Train_No = 55000
+Test_No = 10000
+
+#%% Data Input
+# MNIST
+mnist = input_data.read_data_sets('../../MNIST_data', one_hot = True)
+
+# X
+trainX, _ = mnist.train.next_batch(Train_No) 
+testX, _  = mnist.test.next_batch(Test_No) 
+
+# Mask Vector and Hint Vector Generation
+def sample_M(m, n, p):
+    A = np.random.uniform(0., 1., size = [m, n])
+    B = A > p
+    C = 1.*B
+    return C
+  
+trainM = sample_M(Train_No, Dim, p_miss)
+testM = sample_M(Test_No, Dim, p_miss)
 
 #%% Necessary Functions
 # 1. Xavier Initialization Definition
@@ -130,12 +144,10 @@ def discriminator(x, m, g, h):
 def sample_Z(m, n):
     return np.random.uniform(0., 1., size = [m, n])        
 
-# Mask Vector and Hint Vector Generation
-def sample_M(m, n, p):
-    A = np.random.uniform(0., 1., size = [m, n])
-    B = A > p
-    C = 1.*B
-    return C
+def sample_idx(m, n):
+    A = np.random.permutation(m)
+    idx = A[:n]
+    return idx
 
 #%% Structure
 G_sample = generator(X,Z,M)
@@ -172,9 +184,10 @@ i = 1
 for it in tqdm(range(10000)):    
     
     #%% Inputs
-    X_mb, _ = mnist.train.next_batch(mb_size)    
+    mb_idx = sample_idx(Train_No, mb_size)
+    X_mb = trainX[mb_idx,:]  
     Z_mb = sample_Z(mb_size, Dim) 
-    M_mb = sample_M(mb_size, Dim, p_miss)
+    M_mb = trainM[mb_idx,:]  
     H_mb1 = sample_M(mb_size, Dim, 1-p_hint)
     H_mb = M_mb * H_mb1
     
@@ -186,9 +199,11 @@ for it in tqdm(range(10000)):
             
     #%% Output figure
     if it % 100 == 0:
-        X_mb, _ = mnist.train.next_batch(5)    
+      
+        mb_idx = sample_idx(Test_No, 5)
+        X_mb = testX[mb_idx,:]
+        M_mb = testM[mb_idx,:]  
         Z_mb = sample_Z(5, Dim) 
-        M_mb = sample_M(5, Dim, p_miss)
     
         New_X_mb = M_mb * X_mb + (1-M_mb) * Z_mb
         
