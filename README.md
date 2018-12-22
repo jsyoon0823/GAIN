@@ -3,8 +3,6 @@ Title: GAIN: Missing Data Imputation using Generative Adversarial Nets
 
 Authors: Jinsung Yoon, James Jordon, Mihaela van der Schaar
 
-Date: TBD
-
 Reference: J. Yoon, J. Jordon, M. van der Schaar, "GAIN: Missing Data Imputation using Generative Adversarial Nets," International Conference on Machine Learning (ICML), 2018.
 
 Paper Link: http://medianetlab.ee.ucla.edu/papers/ICML_GAIN.pdf
