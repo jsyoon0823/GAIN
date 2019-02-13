@@ -18,3 +18,7 @@ This code shows the implementation of GAIN on MNIST dataset.
 2. Recover missing values on MNIST datasets using GAIN.
 
 3. Show the multiple imputation results on MNIST with GAIN.
+
+------------------------------------
+
+Add source codes for UCI Letter and Spam datasets (02/12/2019)
