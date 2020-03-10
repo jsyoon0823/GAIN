@@ -1,6 +1,6 @@
 # Codebase for "Generative Adversarial Imputation Networks (GAIN)"
 
-Authors: Jinsung Yoon
+Authors: Jinsung Yoon, James Jordon, Mihaela van der Schaar
 
 Paper: Jinsung Yoon, James Jordon, Mihaela van der Schaar, 
 "GAIN: Missing Data Imputation using Generative Adversarial Nets," 
@@ -26,7 +26,7 @@ discriminator model such as multi-layer perceptrons or CNNs.
 
 -   data_name: letter or spam
 -   miss_rate: probability of missing components
--   batch:size: batch size
+-   batch_size: batch size
 -   hint_rate: hint rate
 -   alpha: hyperparameter
 -   iterations: iterations
