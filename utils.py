@@ -15,7 +15,7 @@ import numpy as np
 import tensorflow as tf
 
 
-def normalization (data):
+def normalization (data, parameters=None):
   '''Normalize data in [0, 1] range.
   
   Args:
@@ -30,20 +30,33 @@ def normalization (data):
   _, dim = data.shape
   norm_data = data.copy()
   
-  # MixMax normalization
-  min_val = np.zeros(dim)
-  max_val = np.zeros(dim)
+  if parameters is None:
   
-  # For each dimension
-  for i in range(dim):
-    min_val[i] = np.nanmin(norm_data[:,i])
-    norm_data[:,i] = norm_data[:,i] - np.nanmin(norm_data[:,i])
-    max_val[i] = np.nanmax(norm_data[:,i])
-    norm_data[:,i] = norm_data[:,i] / (np.nanmax(norm_data[:,i]) + 1e-6)   
+    # MixMax normalization
+    min_val = np.zeros(dim)
+    max_val = np.zeros(dim)
     
-  # Return norm_parameters for renormalization
-  norm_parameters = {'min_val': min_val,
-                     'max_val': max_val}
+    # For each dimension
+    for i in range(dim):
+      min_val[i] = np.nanmin(norm_data[:,i])
+      norm_data[:,i] = norm_data[:,i] - np.nanmin(norm_data[:,i])
+      max_val[i] = np.nanmax(norm_data[:,i])
+      norm_data[:,i] = norm_data[:,i] / (np.nanmax(norm_data[:,i]) + 1e-6)   
+      
+    # Return norm_parameters for renormalization
+    norm_parameters = {'min_val': min_val,
+                       'max_val': max_val}
+
+  else:
+    min_val = parameters['min_val']
+    max_val = parameters['max_val']
+    
+    # For each dimension
+    for i in range(dim):
+      norm_data[:,i] = norm_data[:,i] - min_val[i]
+      norm_data[:,i] = norm_data[:,i] / (max_val[i] + 1e-6)  
+      
+    norm_parameters = parameters    
       
   return norm_data, norm_parameters
 
@@ -107,8 +120,8 @@ def rmse_loss (ori_data, imputed_data, data_m):
     - rmse: Root Mean Squared Error
   '''
   
-  ori_data, _ = normalization(ori_data)
-  imputed_data, _ = normalization(imputed_data)
+  ori_data, norm_parameters = normalization(ori_data)
+  imputed_data, _ = normalization(imputed_data, norm_parameters)
     
   # Only for missing values
   nominator = np.sum(((1-data_m) * ori_data - (1-data_m) * imputed_data)**2)
