@@ -22,6 +22,7 @@ from __future__ import print_function
 
 import argparse
 import numpy as np
+from numpy import savetxt
 
 from data_loader import data_loader
 from gain import gain
@@ -63,6 +64,7 @@ def main (args):
   
   print()
   print('RMSE Performance: ' + str(np.round(rmse, 4)))
+  imputed_data_x=np.around(imputed_data_x, decimals=2, out=None)
   
   return imputed_data_x, rmse
 
@@ -105,3 +107,6 @@ if __name__ == '__main__':
   
   # Calls main function  
   imputed_data, rmse = main(args)
+  savetxt('data.csv',imputed_data , delimiter=',')
+  
+  # imputed_data.csv_file("mithun.csv")
